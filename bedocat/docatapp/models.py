@@ -6,6 +6,7 @@ class User(AbstractUser):
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     email = models.EmailField(max_length=254)
+    username = models.CharField(max_length=150, unique=True)
     phone_regex = RegexValidator(regex=r'^\+?1?\d{8,15}$', message="Phone Number Must Be entered in the form: +234123567890. up to 15 digits allowed.")
     phone = models.CharField(validators=[phone_regex], max_length=20, blank=True)
     password = models.CharField(max_length=100)

@@ -41,6 +41,8 @@ INSTALLED_APPS = [
     'rest_framework'
 ]
 
+AUTH_USER_MODEL = "docatapp.User"
+
 REST_FRAMEWORK = {
     # Use Django's standard `django.contrib.auth` permissions,
     # or allow read-only access for unauthenticated users.
@@ -92,7 +94,7 @@ DATABASES = {
         'HOST':'127.0.0.1',
         'PORT':'3306',
         'OPTIONS':{
-            'init_command':"SET sql_mode='STRICT_TRANS_TABLE'"
+            'init_command':"SET sql_mode='STRICT_TRANS_TABLES'"
         }
     }
 }
