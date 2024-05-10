@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+    {% block content %}
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,9 +14,20 @@
 <p>
     INDEX
 </p>
+{% for pet in pets %}
+<ul><img src ="{{pet.petimage.url}}" width='180'/></ul>
+<ul>{{pet.breed}}</ul>
+<ul>{{pet.pettype}}</ul>
+<ul>{{pet.ammount}}</ul>
+<ul>{{pet.location}}</ul>
+<ul>{{pet.description}}</ul>
+<ul><a href="delete/{{pet.id}}">Delete</a></ul>
+{% endfor %}
+
  </main>
  <footer>
 
  </footer>
 </body>
+{% endblock content %}
 </html>

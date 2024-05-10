@@ -21,53 +21,59 @@ class User(AbstractUser):
 
 
 class Pets(models.Model):
-    Dog = 'dg'
-    Cat = 'ct'
+    Dog = 'DOG'
+    Cat = 'CAT'
     PET_CHOICES = {
         Dog : 'DOG',
         Cat : 'CAT'
     }
     STATE_CHOICES = {
-        "ab":'ABIA',
-        "ad":'ADAMAWA',
-        "ak":'AKWA IBOM',
-        "an":'ANAMBRA',
-        "ba":'BAUCHI',
-        "by":'BAYELSA',
-        "be":'BENUE',
-        "bo":'BORNO',
-        "cr":'CROSS RIVER',
-        "de":'DELTA',
-        "eb":'EBONYI',
-        "ed":'EDO',
-        "ek":'EKITI',
-        "en":'ENUGU',
-        "go":'GOMBE',
-        "im":'IMO',
-        "ji":'JIGAWA',
-        "kd":'KADUNA',
-        "kn":'KANU',
-        "kt":'KATSINA',
-        "ke":'KEBBI',
-        "ko":'KOGI',
-        "kw":'KWARA',
-        "la":'LAGOS',
-        "na":'NASSARAWA',
-        "ni":'NIGER',
-        "og":'OGUN',
-        "on":'ONDO',
-        "os":'OSUN',
-        "oy":'OYO',
-        "pl":'PLATEAU',
-        "ri":'RIVERS',
-        "so":'SOKOTO',
-        "ta":'TARABA',
-        "yo":'YOBE',
-        "za":'ZAMFARA',
-        "fc":'ABUJA',
+        "ABIA":'ABIA',
+        "ADAMAWA":'ADAMAWA',
+        "AKWA IBOM":'AKWA IBOM',
+        "ANAMBRA":'ANAMBRA',
+        "BAUCHI":'BAUCHI',
+        "BAYELSA":'BAYELSA',
+        "BENUE":'BENUE',
+        "BORNO":'BORNO',
+        "CROSS RIVER":'CROSS RIVER',
+        "DELTA":'DELTA',
+        "EBONYI":'EBONYI',
+        "EDO":'EDO',
+        "EKITI":'EKITI',
+        "ENUGU":'ENUGU',
+        "GOMBE":'GOMBE',
+        "IMO":'IMO',
+        "JIGAWA":'JIGAWA',
+        "KADUNA":'KADUNA',
+        "KANO":'KANO',
+        "KATSINA":'KATSINA',
+        "KEBBI":'KEBBI',
+        "KOGI":'KOGI',
+        "KWARA":'KWARA',
+        "LAGOS":'LAGOS',
+        "NASSARAWA":'NASSARAWA',
+        "NIGER":'NIGER',
+        "OGUN":'OGUN',
+        "ONDO":'ONDO',
+        "OSUN":'OSUN',
+        "OYO":'OYO',
+        "PLATEAU":'PLATEAU',
+        "RIVERS":'RIVERS',
+        "SOKOTO":'SOKOTO',
+        "TARABA":'TARABA',
+        "YOBE":'YOBE',
+        "ZAMFARA":'ZAMFARA',
+        "ABUJA":'ABUJA',
     }
+    petimage = models.ImageField(upload_to='images/',default='x')
     pettype = models.CharField(max_length=4,choices=PET_CHOICES,default='Which pet?')
     breed = models.CharField(max_length=50)
     amount = models.DecimalField( max_digits=12, decimal_places=2)
     description = models.TextField()
     location = models.CharField(max_length=20, choices=STATE_CHOICES, default='ab')
+    def __str__(self):
+        return self.breed +" "+ self.pettype + " " + self.location
+    class Meta:
+        verbose_name = "PET"
+        verbose_name_plural = "PETS"

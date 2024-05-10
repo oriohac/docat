@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+    {% block content %}
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,14 +16,14 @@
     <div class="formdiv">
 <form action="" method="post">
     {% csrf_token %}
-    <input type="text" name="firstname" id="" placeholder="firstname">
-    <input type="text" name="lastname" id="" placeholder="lastname">
-    <input type="email" name="email" placeholder="example@email.com">
-    <input type="text" name="username" placeholder="username">
-    <input type="tel" name="phone" placeholder="phone">
-    <input type="password" name="password" id="" placeholder="password">
-    <input type="password" name="confirmpassword" id="" placeholder="confirm password">
-    <input type="submit" value="Signup" name="signupbtn">
+    <ul><input type="text" name="firstname" id="" placeholder="firstname"></ul>
+    <ul><input type="text" name="lastname" id="" placeholder="lastname"></ul>
+    <ul><input type="email" name="email" placeholder="example@email.com"></ul>
+    <ul><input type="text" name="username" placeholder="username"></ul>
+    <ul><input type="tel" name="phone" placeholder="phone"></ul>
+    <ul><input type="password" name="password" id="" placeholder="password"></ul>
+    <ul><input type="password" name="confirmpassword" id="" placeholder="confirm password"></ul>
+    <ul><input type="submit" value="Signup" name="signupbtn"></ul>
 
 </form>
     </div>
@@ -33,4 +34,5 @@
 
     </footer>
 </body>
+{% endblock content %}
 </html>
