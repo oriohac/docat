@@ -67,7 +67,7 @@ class Pets(models.Model):
         "ABUJA":'ABUJA',
     }
     petimage = models.ImageField(upload_to='images/',default='x')
-    pettype = models.CharField(max_length=4,choices=PET_CHOICES,default='Which pet?')
+    pettype = models.CharField(max_length=5,choices=PET_CHOICES,default='Other')
     breed = models.CharField(max_length=50)
     amount = models.DecimalField( max_digits=12, decimal_places=2)
     description = models.TextField()

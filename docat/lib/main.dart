@@ -1,6 +1,9 @@
 import 'dart:convert';
 
+import 'package:docat/Profile.dart';
+import 'package:docat/Signup.dart';
 import 'package:docat/create.dart';
+import 'package:docat/login.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -66,7 +69,13 @@ class _DocatState extends State<Docat> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      routes: {'/create':(context) => const Create()},
+      routes: {
+        '/create': (context) => const Create(),
+        '/login': (context) => const Login(),
+        '/signup':(context) => const Signup(),
+        '/profile':(context) => const Profile(),
+        '/home':(context) => const Docat()
+      },
       debugShowCheckedModeBanner: false,
       home: Scaffold(
           body: Center(
@@ -80,7 +89,7 @@ class _DocatState extends State<Docat> {
                     itemCount: snapshot.data!.length,
                     itemBuilder: (context, index) {
                       return Card(
-                          margin: const EdgeInsets.fromLTRB(8, 4, 8, 4),
+                        margin: const EdgeInsets.fromLTRB(8, 4, 8, 4),
                         elevation: 2.0,
                         color: const Color.fromARGB(255, 244, 248, 244),
                         child: Padding(
@@ -90,7 +99,8 @@ class _DocatState extends State<Docat> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Padding(
-                                  padding: const EdgeInsets.fromLTRB(4, 4, 4, 8),
+                                  padding:
+                                      const EdgeInsets.fromLTRB(4, 4, 4, 8),
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
@@ -103,45 +113,66 @@ class _DocatState extends State<Docat> {
                                 ),
                                 Row(
                                   children: [
-                                    const Text('Pet Type: ',style: TextStyle(fontWeight: FontWeight.bold)),
-                                    Text(snapshot.data![index].pettype, textAlign: TextAlign.start,style: const TextStyle(),),
+                                    const Text('Pet Type: ',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold)),
+                                    Text(
+                                      snapshot.data![index].pettype,
+                                      textAlign: TextAlign.start,
+                                      style: const TextStyle(),
+                                    ),
                                   ],
                                 ),
                                 Row(
                                   children: [
-                                    const Text("Breed: ",style: TextStyle(fontWeight: FontWeight.bold)),
+                                    const Text("Breed: ",
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold)),
                                     Text(snapshot.data![index].breed),
                                   ],
                                 ),
                                 Row(
                                   children: [
-                                    const Text("Price: ",style: TextStyle(fontWeight: FontWeight.bold)),
+                                    const Text("Price: ",
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold)),
                                     Text(snapshot.data![index].amount),
                                   ],
                                 ),
                                 Row(
                                   children: [
-
-                                    Expanded(child: Text(snapshot.data![index].description, maxLines: 2, overflow: TextOverflow.fade,)),
+                                    Expanded(
+                                        child: Text(
+                                      snapshot.data![index].description,
+                                      maxLines: 2,
+                                      overflow: TextOverflow.fade,
+                                    )),
                                   ],
                                 ),
                                 Row(
                                   children: [
-                                    const Text("Location: ", style: TextStyle(fontWeight: FontWeight.bold)),
+                                    const Text("Location: ",
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold)),
                                     Text(snapshot.data![index].location),
                                   ],
                                 ),
                                 Row(
                                   children: [
-                                    TextButton(onPressed: (){}, child: const Text("Details")),
+                                    TextButton(
+                                        onPressed: () {},
+                                        child: const Text("Details")),
                                     const Spacer(),
                                     ElevatedButton(
-                                      style: ElevatedButton.styleFrom(
-                                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(2)))
-                                      ),
-                                      onPressed: (){
-                                      Navigator.pushNamed(context, '/create');
-                                    }, child: const Text("Adopt")),
+                                        style: ElevatedButton.styleFrom(
+                                            shape: const RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.all(
+                                                    Radius.circular(2)))),
+                                        onPressed: () {
+                                          Navigator.pushNamed(
+                                              context, '/create');
+                                        },
+                                        child: const Text("Adopt")),
                                   ],
                                 )
                               ],

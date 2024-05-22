@@ -6,8 +6,10 @@ from django.contrib.auth import authenticate
 from django.urls import reverse
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from rest_framework import serializers,status
+from rest_framework.authtoken.models import Token
 
-from .serializer import PetSerializer
+from .serializer import PetSerializer, UserSerializer
 from .models import Pets
 # Create your views here.
 
@@ -94,7 +96,35 @@ def delete(request, id):
 
 @api_view(['GET','POST'])
 def list(request):
-    queryset = Pets.objects.all()
-    serializer = PetSerializer(queryset,many=True)
-    return Response(serializer.data)
+    if request.method == 'GET':
+        queryset = Pets.objects.all()
+        serializer = PetSerializer(queryset,many=True)
+        return Response(serializer.data)
+    elif request.method == 'POST':
+        serializer = PetSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data,status=status.HTTP_201_CREATED)
+        return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+    
+@api_view(['GET','POST'])
+def signupApi(request):
+    serializer = UserSerializer(data=request.data)
+    if serializer.is_valid():
+        user = serializer.save()
+        token, created = Token.objects.get_or_create(user=user)
+        return Response({'token':token.key, 'success':'User created successfully'},status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['GET','POST'])
+def loginApi(request):
+    serializer = UserSerializer(data=request.data)
+    if serializer.is_valid():
+        user = authenticate(username=serializer.data['username'],password=serializer.data['password'])
+        if user:
+            token, createed = Token.objects.get_or_create(user=user)
+            return Response({'token':token.key,'success':'Login Successful'}, status=status.HTTP_201_CREATED)
+        return Response({'Message':'Invalid Username or Password'}, status=status.HTTP_404_NOT_FOUND)
+
 
