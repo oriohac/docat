@@ -4,12 +4,13 @@ from django.contrib import messages
 from django.contrib.auth.models import User, auth
 from django.contrib.auth import authenticate
 from django.urls import reverse
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import serializers,status
 from rest_framework.authtoken.models import Token
 
-from .serializer import PetSerializer, UserSerializer
+from .serializer import LoginSerializer, PetSerializer, UserSerializer
 from .models import Pets
 # Create your views here.
 
@@ -117,14 +118,23 @@ def signupApi(request):
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(['GET','POST'])
+@api_view(['POST'])
 def loginApi(request):
-    serializer = UserSerializer(data=request.data)
+    serializer = LoginSerializer(data=request.data)
     if serializer.is_valid():
-        user = authenticate(username=serializer.data['username'],password=serializer.data['password'])
+        # user = authenticate(username=serializer.validated_data['username'], password=serializer.validated_data['password'])
+        user = serializer.validated_data
         if user:
-            token, createed = Token.objects.get_or_create(user=user)
-            return Response({'token':token.key,'success':'Login Successful'}, status=status.HTTP_201_CREATED)
-        return Response({'Message':'Invalid Username or Password'}, status=status.HTTP_404_NOT_FOUND)
+            token, created = Token.objects.get_or_create(user=user)
+            return Response({'token': token.key, 'success': 'Login Successful'}, status=status.HTTP_201_CREATED)
+        else:
+            return Response({'Message': 'Invalid Username or Password'}, status=status.HTTP_400_BAD_REQUEST)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def logoutApi(request):
+    request.user.auth_token.delete()
+    return Response(status=status.HTTP_204_NO_CONTENT)
 
 

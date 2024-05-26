@@ -1,4 +1,6 @@
 from rest_framework import serializers
+from django.contrib.auth import authenticate
+from django.contrib.auth.password_validation import validate_password
 from .models import Pets, User
 class PetSerializer(serializers.ModelSerializer):
     class Meta:
@@ -21,3 +23,12 @@ class UserSerializer(serializers.ModelSerializer):
             confirm_password=['confirm_password']
         )
         return user
+    
+class LoginSerializer(serializers.Serializer):
+    username = serializers.CharField()
+    password = serializers.CharField()
+    def validate(self, attrs):
+        user = authenticate(username=attrs['username'],password=attrs['password'])
+        if user and user.is_active:
+            return user
+        raise serializers.ValidationError("Invalid credentials.")

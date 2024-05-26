@@ -1,4 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -8,13 +12,36 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
-
-  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+
+  void loginApi() async {
+    final response = await http.post(Uri.parse('http://127.0.0.1:8000/loginA/'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8'
+        },
+        body: jsonEncode(<String, String>{
+          'username': _usernameController.text,
+          'password': _passwordController.text,
+        }));
+    if (response.statusCode == 201) {
+      var data = jsonDecode(response.body);
+      String token = data['token'];
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.setString('token', token);
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('Login success'),
+        behavior: SnackBarBehavior.floating,
+      ));
+      Navigator.pushNamed(context, '/profile');
+    } else {
+      throw Exception('Login failed');
+    }
+  }
 
   @override
   void dispose() {
-    _emailController.dispose();
+    _usernameController.dispose();
     _passwordController.dispose();
     super.dispose();
   }
@@ -57,7 +84,7 @@ class _LoginState extends State<Login> {
                 height: 62,
                 width: 320,
                 child: TextField(
-                  controller: _emailController,
+                  controller: _usernameController,
                   style: const TextStyle(
                     fontFamily: 'Poppinsr',
                     fontSize: 17,
@@ -66,7 +93,7 @@ class _LoginState extends State<Login> {
                   decoration: const InputDecoration(
                       filled: true,
                       fillColor: Colors.white,
-                      hintText: AutofillHints.email,
+                      hintText: AutofillHints.username,
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(6)))),
                 ),
@@ -135,7 +162,9 @@ class _LoginState extends State<Login> {
                     backgroundColor: const Color(0xffDB7D95),
                   ),
                   onPressed: () {
-                    _login();
+                    setState(() {
+                      login();
+                    });
                   },
                   child: const Text(
                     "LOGIN",
@@ -152,13 +181,12 @@ class _LoginState extends State<Login> {
     );
   }
 
-  void _login() async {
-    String email = _emailController.text;
-    String password = _passwordController.text;
-
-    
-    ScaffoldMessenger.of(context).showSnackBar( const SnackBar(behavior: SnackBarBehavior.floating, content: Text("User is successfuly Signed In")));
-    
-    Navigator.pushNamed(context, '/profile');
+  void login() {
+    if (_usernameController.text.isEmpty || _passwordController.text.isEmpty) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('Fill all fields')));
+    } else {
+      loginApi();
     }
+  }
 }
