@@ -108,6 +108,13 @@ def list(request):
             return Response(serializer.data,status=status.HTTP_201_CREATED)
         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
     
+@api_view(['GET'])
+def petdetail(request):
+    queryset = Pets.objects.get(id=id)
+    serializer = PetSerializer(queryset,many=True)
+    return Response(serializer.data)
+    
+    
 @api_view(['GET','POST'])
 def signupApi(request):
     serializer = UserSerializer(data=request.data)

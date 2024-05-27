@@ -9,7 +9,16 @@ import 'package:http/http.dart' as http;
 
 void main() {
   runApp(
-    const Docat(),
+    MaterialApp(
+      routes: {
+        '/create': (context) => const Create(),
+        '/login': (context) => const Login(),
+        '/signup': (context) => const Signup(),
+        '/profile': (context) => const Profile(),
+        '/home': (context) => const Docat()
+      },
+      debugShowCheckedModeBanner: false,
+      home: const Docat()),
   );
 }
 
@@ -69,123 +78,156 @@ class _DocatState extends State<Docat> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      routes: {
-        '/create': (context) => const Create(),
-        '/login': (context) => const Login(),
-        '/signup':(context) => const Signup(),
-        '/profile':(context) => const Profile(),
-        '/home':(context) => const Docat()
-      },
       debugShowCheckedModeBanner: false,
       home: Scaffold(
           body: Center(
-        child: FutureBuilder<List<Petdata>>(
-            future: pet,
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const CircularProgressIndicator();
-              } else if (snapshot.hasData) {
-                return ListView.builder(
-                    itemCount: snapshot.data!.length,
-                    itemBuilder: (context, index) {
-                      return Card(
-                        margin: const EdgeInsets.fromLTRB(8, 4, 8, 4),
-                        elevation: 2.0,
-                        color: const Color.fromARGB(255, 244, 248, 244),
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(4, 4, 4, 8),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(8, 12, 8, 4),
+              child: Row(
+                children: [
+                  Text('firstname surname'),
+                  Spacer(),
+                  GestureDetector(
+                    onTap: () {
+                      if (condition) {
+                         Navigator.pushNamed(context, '/profile');
+                      }else{
+                        
+                      }
+                     
+                    },
+                    child: ClipOval(
+                        child: Image.asset(
+                      'lib/images/default.jpg',
+                      fit: BoxFit.cover,
+                      height: 40,
+                      width: 40,
+                    )),
+                  ),
+                ],
+              ),
+            ),
+            Expanded(
+              child: FutureBuilder<List<Petdata>>(
+                  future: pet,
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const CircularProgressIndicator();
+                    } else if (snapshot.hasData) {
+                      return ListView.builder(
+                          itemCount: snapshot.data!.length,
+                          itemBuilder: (context, index) {
+                            return Card(
+                              margin: const EdgeInsets.fromLTRB(8, 4, 8, 4),
+                              elevation: 2.0,
+                              color: const Color.fromARGB(255, 244, 248, 244),
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
-                                      Expanded(
-                                        child: Image.network('http://127.0.0.1:8000' +
-                                            snapshot.data![index].petimage),
+                                      Padding(
+                                        padding: const EdgeInsets.fromLTRB(
+                                            4, 4, 4, 8),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Expanded(
+                                              child: Image.network(
+                                                  'http://127.0.0.1:8000' +
+                                                      snapshot.data![index]
+                                                          .petimage),
+                                            ),
+                                          ],
+                                        ),
                                       ),
+                                      Row(
+                                        children: [
+                                          const Text('Pet Type: ',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold)),
+                                          Text(
+                                            snapshot.data![index].pettype,
+                                            textAlign: TextAlign.start,
+                                            style: const TextStyle(),
+                                          ),
+                                        ],
+                                      ),
+                                      Row(
+                                        children: [
+                                          const Text("Breed: ",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold)),
+                                          Text(snapshot.data![index].breed),
+                                        ],
+                                      ),
+                                      Row(
+                                        children: [
+                                          const Text("Price: ",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold)),
+                                          Text(snapshot.data![index].amount),
+                                        ],
+                                      ),
+                                      Row(
+                                        children: [
+                                          Expanded(
+                                              child: Text(
+                                            snapshot.data![index].description,
+                                            maxLines: 2,
+                                            overflow: TextOverflow.fade,
+                                          )),
+                                        ],
+                                      ),
+                                      Row(
+                                        children: [
+                                          const Text("Location: ",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold)),
+                                          Text(snapshot.data![index].location),
+                                        ],
+                                      ),
+                                      Row(
+                                        children: [
+                                          TextButton(
+                                              onPressed: () {},
+                                              child: const Text("Details")),
+                                          const Spacer(),
+                                          ElevatedButton(
+                                              style: ElevatedButton.styleFrom(
+                                                  shape:
+                                                      const RoundedRectangleBorder(
+                                                          borderRadius:
+                                                              BorderRadius.all(
+                                                                  Radius
+                                                                      .circular(
+                                                                          2)))),
+                                              onPressed: () {
+                                                Navigator.pushNamed(
+                                                    context, '/create');
+                                              },
+                                              child: const Text("Adopt")),
+                                        ],
+                                      )
                                     ],
                                   ),
                                 ),
-                                Row(
-                                  children: [
-                                    const Text('Pet Type: ',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold)),
-                                    Text(
-                                      snapshot.data![index].pettype,
-                                      textAlign: TextAlign.start,
-                                      style: const TextStyle(),
-                                    ),
-                                  ],
-                                ),
-                                Row(
-                                  children: [
-                                    const Text("Breed: ",
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold)),
-                                    Text(snapshot.data![index].breed),
-                                  ],
-                                ),
-                                Row(
-                                  children: [
-                                    const Text("Price: ",
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold)),
-                                    Text(snapshot.data![index].amount),
-                                  ],
-                                ),
-                                Row(
-                                  children: [
-                                    Expanded(
-                                        child: Text(
-                                      snapshot.data![index].description,
-                                      maxLines: 2,
-                                      overflow: TextOverflow.fade,
-                                    )),
-                                  ],
-                                ),
-                                Row(
-                                  children: [
-                                    const Text("Location: ",
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold)),
-                                    Text(snapshot.data![index].location),
-                                  ],
-                                ),
-                                Row(
-                                  children: [
-                                    TextButton(
-                                        onPressed: () {},
-                                        child: const Text("Details")),
-                                    const Spacer(),
-                                    ElevatedButton(
-                                        style: ElevatedButton.styleFrom(
-                                            shape: const RoundedRectangleBorder(
-                                                borderRadius: BorderRadius.all(
-                                                    Radius.circular(2)))),
-                                        onPressed: () {
-                                          Navigator.pushNamed(
-                                              context, '/create');
-                                        },
-                                        child: const Text("Adopt")),
-                                  ],
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
-                      );
-                    });
-              } else {
-                throw Exception(
-                    ' ${snapshot.error} Check all parts of your code oga');
-              }
-            }),
+                              ),
+                            );
+                          });
+                    } else {
+                      throw Exception(
+                          ' ${snapshot.error} Check all parts of your code oga');
+                    }
+                  }),
+            ),
+          ],
+        ),
       )),
     );
   }
