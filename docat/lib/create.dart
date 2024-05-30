@@ -41,7 +41,7 @@ class _CreateState extends State<Create> {
       final response = await request.send();
       if (petbreedCon.text.isEmpty ||
           petAmountCon.text.isEmpty ||
-          petDescriptionCon.text.isEmpty) {
+          petDescriptionCon.text.isEmpty ) {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Row(children: [
             Text("Please fill all inputs"),
@@ -59,13 +59,10 @@ class _CreateState extends State<Create> {
           dismissDirection: DismissDirection.horizontal,
           duration: Duration(seconds: 5),
         ));
-        // petImageCon.clear();
-        // petTypeCon.clear();
-        // petbreedCon.clear();
-        // petAmountCon.clear();
-        // petDescriptionCon.clear();
-        // petLocationCon.clear();
-        // Navigator.pushNamed(context, '/home');
+        petbreedCon.clear();
+        petAmountCon.clear();
+        petDescriptionCon.clear();
+        Navigator.pushNamed(context, '/profile');
       } else {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
             content: Text('Error Sending data'),

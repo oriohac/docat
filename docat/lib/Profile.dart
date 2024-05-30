@@ -69,6 +69,20 @@ class _ProfileState extends State<Profile> {
                     Navigator.pushNamed(context, "/home");
                   },
                   child: const Text('Home')),
+                ElevatedButton(
+                                              style: ElevatedButton.styleFrom(
+                                                  shape:
+                                                      const RoundedRectangleBorder(
+                                                          borderRadius:
+                                                              BorderRadius.all(
+                                                                  Radius
+                                                                      .circular(
+                                                                          2)))),
+                                              onPressed: () {
+                                                Navigator.pushNamed(
+                                                    context, '/create');
+                                              },
+                                              child: const Text("Create New")),
               ElevatedButton(
                   onPressed: () {
                     logout();
