@@ -17,6 +17,6 @@ urlpatterns = [
     path('signupA/',signupApi,name='signup'),
     path('loginA/',loginApi,name='login'),
     path('logoutA/',logoutApi, name='logout'),
-    path('detail/',petdetail, name='detail')
+    path('detail/<int:id>',petdetail, name='detail')
 ]
 urlpatterns += static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)

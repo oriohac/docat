@@ -5,6 +5,7 @@ import 'dart:ffi';
 import 'package:docat/Profile.dart';
 import 'package:docat/Signup.dart';
 import 'package:docat/create.dart';
+import 'package:docat/detail.dart';
 import 'package:docat/login.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -18,7 +19,8 @@ void main() {
       '/login': (context) => const Login(),
       '/signup': (context) => const Signup(),
       '/profile': (context) => const Profile(),
-      '/home': (context) => const Docat()
+      '/home': (context) => const Docat(),
+      '/detail': (context) => const Detail()
     }, debugShowCheckedModeBanner: false, home: const Docat()),
   );
 }
@@ -30,13 +32,15 @@ class Petdata {
   final String amount;
   final String description;
   final String location;
+  final int id;
   Petdata(
       {required this.pettype,
       required this.breed,
       required this.amount,
       required this.description,
       required this.petimage,
-      required this.location});
+      required this.location,
+      required this.id});
   factory Petdata.fromJson(dynamic json) {
     return Petdata(
         pettype: json['pettype'] as String,
@@ -44,7 +48,8 @@ class Petdata {
         amount: json['amount'] as String,
         description: json['description'] as String,
         petimage: json['petimage'] as String,
-        location: json['location'] as String);
+        location: json['location'] as String,
+        id: json['id'] as int);
   }
 }
 
@@ -192,7 +197,7 @@ class _DocatState extends State<Docat> {
                     } else if (snapshot.hasData) {
                       return ListView.builder(
                           scrollDirection: Axis.horizontal,
-                          itemCount: 5,
+                          itemCount: snapshot.data!.length,
                           itemBuilder: (context, index) {
                             return Row(
                               children: [
@@ -307,7 +312,7 @@ class _DocatState extends State<Docat> {
                                           Row(
                                             children: [
                                               TextButton(
-                                                  onPressed: () {},
+                                                  onPressed: () {Navigator.pushNamed(context, '/detail');},
                                                   child: const Text("Details")),
                                               const Spacer(),
                                               ElevatedButton(
@@ -318,7 +323,7 @@ class _DocatState extends State<Docat> {
                                                                   Radius
                                                                       .circular(
                                                                           2)))),
-                                                  onPressed: () {},
+                                                  onPressed: () {Navigator.pushNamed(context, '/detail');},
                                                   child: const Text("Adopt")),
                                             ],
                                           )

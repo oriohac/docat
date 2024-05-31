@@ -109,9 +109,9 @@ def list(request):
         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
     
 @api_view(['GET'])
-def petdetail(request):
+def petdetail(request, id):
     queryset = Pets.objects.get(id=id)
-    serializer = PetSerializer(queryset,many=True)
+    serializer = PetSerializer(queryset)
     return Response(serializer.data)
     
     
