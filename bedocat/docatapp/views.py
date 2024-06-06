@@ -2,7 +2,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, render
 from django.contrib import messages
 from django.contrib.auth.models import User, auth
-from django.contrib.auth import authenticate
+from django.contrib.auth import authenticate, get_user_model
 from django.urls import reverse
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
@@ -10,8 +10,11 @@ from rest_framework.response import Response
 from rest_framework import serializers,status
 from rest_framework.authtoken.models import Token
 
+
 from .serializer import LoginSerializer, PetSerializer, UserSerializer
 from .models import Pets
+
+User = get_user_model()
 # Create your views here.
 
 def signup(request):
@@ -37,8 +40,7 @@ def signup(request):
                     email = email,
                     username = username,
                     phone = phone,
-                    password = password,
-                    confirm_password = confirm_password
+                    password = password
                     ).save()
                 return redirect('login/')
         else:
@@ -114,6 +116,12 @@ def petdetail(request, id):
     serializer = PetSerializer(queryset)
     return Response(serializer.data)
     
+@api_view(['GET'])
+def userDetail(request,id):
+    queryset = User.objects.get(id=id
+    )
+    serializer = UserSerializer(queryset)
+    return Response(serializer.data)
     
 @api_view(['GET','POST'])
 def signupApi(request):
@@ -133,7 +141,7 @@ def loginApi(request):
         user = serializer.validated_data
         if user:
             token, created = Token.objects.get_or_create(user=user)
-            return Response({'token': token.key, 'success': 'Login Successful'}, status=status.HTTP_201_CREATED)
+            return Response({'token': token.key, 'success': 'Login Successful','id':user.id,'username':user.username}, status=status.HTTP_201_CREATED)
         else:
             return Response({'Message': 'Invalid Username or Password'}, status=status.HTTP_400_BAD_REQUEST)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

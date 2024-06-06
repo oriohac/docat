@@ -1,6 +1,6 @@
 
 from django.urls import path
-from .views import  create, delete, index, login, logoutApi, petdetail, signup, list, signupApi, loginApi
+from .views import  create, delete, index, login, logoutApi, petdetail, signup, list, signupApi, loginApi, userDetail
 from django.conf import settings
 from django.conf.urls.static import static
 from rest_framework.routers import DefaultRouter
@@ -17,6 +17,7 @@ urlpatterns = [
     path('signupA/',signupApi,name='signup'),
     path('loginA/',loginApi,name='login'),
     path('logoutA/',logoutApi, name='logout'),
-    path('detail/<int:id>',petdetail, name='detail')
+    path('detail/<int:id>',petdetail, name='detail'),
+    path('users/<int:id>',userDetail,name='users')
 ]
 urlpatterns += static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)

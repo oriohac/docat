@@ -21,25 +21,26 @@ class _SignupState extends State<Signup> {
   final TextEditingController _phoneController = TextEditingController();
 
   void signupApi() async {
-    final response =
-        await http.post(Uri.parse('http://127.0.0.1:8000/signupA/'),headers: { 
-        'Accept': 'application/json',
-        'Content-Type': 'application/json' 
-    },
-            body: jsonEncode({
-              'first_name': _firstnameController.text,
-              'last_name': _lastnameController.text,
-              'email': _emailController.text,
-              'username': _usernameController.text,
-              'phone': _phoneController.text,
-              'password': _passwordController.text,
-              'confirm_password': _confpasswordController.text,
-            }));
+    final response = await http.post(
+        Uri.parse('http://127.0.0.1:8000/signupA/'),
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: jsonEncode({
+          'first_name': _firstnameController.text,
+          'last_name': _lastnameController.text,
+          'email': _emailController.text,
+          'username': _usernameController.text,
+          'phone': _phoneController.text,
+          'password': _passwordController.text,
+        }));
     if (response.statusCode == 201) {
       var data = jsonDecode(response.body);
       String token = data['token'];
       SharedPreferences prefs = await SharedPreferences.getInstance();
       prefs.setString('token', token);
+
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text('Signup success'),
           behavior: SnackBarBehavior.floating));
@@ -138,8 +139,7 @@ class _SignupState extends State<Signup> {
             ),
             // Username
             Padding(
-              padding: const EdgeInsets.fromLTRB(
-                0, 0, 0, 18),
+              padding: const EdgeInsets.fromLTRB(0, 0, 0, 18),
               child: SizedBox(
                 height: 62,
                 width: 320,
@@ -161,7 +161,7 @@ class _SignupState extends State<Signup> {
             ),
 // phone
             Padding(
-              padding: const EdgeInsets.fromLTRB(0,0,0,18),
+              padding: const EdgeInsets.fromLTRB(0, 0, 0, 18),
               child: SizedBox(
                 height: 62,
                 width: 320,
@@ -300,11 +300,16 @@ class _SignupState extends State<Signup> {
                       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                           content: Text('Please fill all fields'),
                           behavior: SnackBarBehavior.floating));
+                    } else if (_passwordController.text !=
+                        _confpasswordController.text) {
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                          content: Text('Passwords Not Matched'),
+                          behavior: SnackBarBehavior.floating,
+                          dismissDirection: DismissDirection.horizontal));
                     } else {
                       setState(() {
                         signupApi();
                       });
-                      
                     }
                   },
                   child: const Text(

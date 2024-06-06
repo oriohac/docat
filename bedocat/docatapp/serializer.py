@@ -17,10 +17,9 @@ class UserSerializer(serializers.ModelSerializer):
             username = validated_data['username'],
             password = validated_data['password'],
             email = validated_data['email'],
-            first_name =['first_name'],
-            last_name=['last_name'],
-            phone=['phone'],
-            confirm_password=['confirm_password']
+            first_name = validated_data['first_name'],
+            last_name = validated_data['last_name'],
+            phone = validated_data['phone']
         )
         return user
     

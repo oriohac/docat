@@ -1,3 +1,4 @@
+from django import forms
 from django.db import models
 from django.core.validators import RegexValidator
 from django.contrib.auth.models import AbstractUser, User
@@ -10,7 +11,6 @@ class User(AbstractUser):
     phone_regex = RegexValidator(regex=r'^\+?1?\d{8,15}$', message="Phone Number Must Be entered in the form: +234123567890. up to 15 digits allowed.")
     phone = models.CharField(validators=[phone_regex], max_length=20, blank=True)
     password = models.CharField(max_length=100)
-    confirm_password = models.CharField(max_length=100)
     created_at = models.DateTimeField(auto_now_add=True,  null=True)
     def __str__(self):
         return self.last_name

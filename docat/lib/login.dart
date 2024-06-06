@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:docat/Profile.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -27,13 +28,18 @@ class _LoginState extends State<Login> {
     if (response.statusCode == 201) {
       var data = jsonDecode(response.body);
       String token = data['token'];
+      int id = data['id'];
       SharedPreferences prefs = await SharedPreferences.getInstance();
       prefs.setString('token', token);
+      prefs.setInt('id', id);
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text('Login success'),
         behavior: SnackBarBehavior.floating,
       ));
-      Navigator.pushNamed(context, '/profile');
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => Profile()));
     } else {
       throw Exception('Login failed');
     }
@@ -45,6 +51,8 @@ class _LoginState extends State<Login> {
     _passwordController.dispose();
     super.dispose();
   }
+
+ 
 
   @override
   Widget build(BuildContext context) {
@@ -181,12 +189,15 @@ class _LoginState extends State<Login> {
     );
   }
 
-  void login() {
+  void login() async {
     if (_usernameController.text.isEmpty || _passwordController.text.isEmpty) {
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text('Fill all fields')));
     } else {
+      
       loginApi();
+            
+      
     }
   }
 }
