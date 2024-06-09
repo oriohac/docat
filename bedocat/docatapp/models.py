@@ -66,6 +66,7 @@ class Pets(models.Model):
         "ZAMFARA":'ZAMFARA',
         "ABUJA":'ABUJA',
     }
+    owner = models.ForeignKey(User, on_delete=models.CASCADE,related_name='pets')
     petimage = models.ImageField(upload_to='images/',default='x')
     pettype = models.CharField(max_length=5,choices=PET_CHOICES,default='Other')
     breed = models.CharField(max_length=50)

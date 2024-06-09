@@ -7,7 +7,7 @@ from django.urls import reverse
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from rest_framework import serializers,status
+from rest_framework import serializers,status, permissions
 from rest_framework.authtoken.models import Token
 
 
@@ -118,9 +118,16 @@ def petdetail(request, id):
     
 @api_view(['GET'])
 def userDetail(request,id):
-    queryset = User.objects.get(id=id
-    )
+    queryset = User.objects.get(id=id)
     serializer = UserSerializer(queryset)
+    return Response(serializer.data)
+
+@api_view(['GET'])
+@permission_classes([permissions.IsAuthenticated])
+def userPet(request):
+    user = request.user.id
+    petset = Pets.objects.filter(owner=user)
+    serializer = PetSerializer(petset,many=True)
     return Response(serializer.data)
     
 @api_view(['GET','POST'])

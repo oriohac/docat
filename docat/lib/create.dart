@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'package:http_parser/http_parser.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Create extends StatefulWidget {
   const Create({super.key});
@@ -24,6 +25,8 @@ class _CreateState extends State<Create> {
   File? selectedimage;
 
   Future<void> createnew() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final id = prefs.getInt('id');
     final request = http.MultipartRequest(
       'POST',
       Uri.parse('http://127.0.0.1:8000/list/'),
@@ -34,6 +37,7 @@ class _CreateState extends State<Create> {
     request.fields["amount"] = petAmountCon.text;
     request.fields["description"] = petDescriptionCon.text;
     request.fields["location"] = location;
+    request.fields["owner"] = id.toString();
     request.files.add(await http.MultipartFile.fromPath(
         'petimage', selectedimage!.path,
         contentType: MediaType('image', 'jpeg')));
@@ -41,7 +45,7 @@ class _CreateState extends State<Create> {
       final response = await request.send();
       if (petbreedCon.text.isEmpty ||
           petAmountCon.text.isEmpty ||
-          petDescriptionCon.text.isEmpty ) {
+          petDescriptionCon.text.isEmpty) {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Row(children: [
             Text("Please fill all inputs"),

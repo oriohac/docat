@@ -40,13 +40,13 @@ class Petdata {
       required this.location});
   factory Petdata.fromJson(dynamic json) {
     return Petdata(
-        pettype: json['pettype'] as String,
-        breed: json['breed'] as String,
-        amount: json['amount'] as String,
-        description: json['description'] as String,
-        petimage: json['petimage'] as String,
-        location: json['location'] as String,
-        );
+      pettype: json['pettype'] as String,
+      breed: json['breed'] as String,
+      amount: json['amount'] as String,
+      description: json['description'] as String,
+      petimage: json['petimage'] as String,
+      location: json['location'] as String,
+    );
   }
 }
 
@@ -129,7 +129,7 @@ class _DocatState extends State<Docat> {
             DrawerHeader(
                 child: ListView(
               children: [
-                ListTile(
+                const ListTile(
                   leading: Icon(Icons.pets),
                   title: Text('DOCAT'),
                 )
@@ -137,12 +137,12 @@ class _DocatState extends State<Docat> {
             )),
             GestureDetector(
               onTap: () => goProfile(),
-              child: ListTile(
+              child: const ListTile(
                 leading: Icon(Icons.person),
                 title: Text('PROFILE'),
               ),
             ),
-            ListTile(
+            const ListTile(
               leading: Icon(Icons.logout),
               title: Text('LOGOUT'),
             )
@@ -189,7 +189,7 @@ class _DocatState extends State<Docat> {
               future: pet,
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const CircularProgressIndicator();
+                  return const Center(child: CircularProgressIndicator());
                 } else if (snapshot.hasData) {
                   return ListView.builder(
                       scrollDirection: Axis.horizontal,
@@ -220,7 +220,7 @@ class _DocatState extends State<Docat> {
                   future: pet,
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const CircularProgressIndicator();
+                      return const Center(child: CircularProgressIndicator());
                     } else if (snapshot.hasData) {
                       return ListView.builder(
                           itemCount: snapshot.data!.length,
@@ -275,7 +275,7 @@ class _DocatState extends State<Docat> {
                                           const Text("Price: ",
                                               style: TextStyle(
                                                   fontWeight: FontWeight.bold)),
-                                          Text(snapshot.data![index].amount),
+                                          Text('₦${snapshot.data![index].amount}'),
                                         ],
                                       ),
                                       Row(
