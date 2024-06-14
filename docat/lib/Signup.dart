@@ -44,6 +44,7 @@ class _SignupState extends State<Signup> {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text('Signup success'),
           behavior: SnackBarBehavior.floating));
+      Navigator.pop(context);
       Navigator.pushNamed(context, '/login');
     } else {
       throw Exception('Faileed to signup, check server');
@@ -104,11 +105,12 @@ class _SignupState extends State<Signup> {
                   style: const TextStyle(
                     fontFamily: 'Poppinsr',
                     fontSize: 17,
+                    color: Colors.white
                   ),
                   textAlign: TextAlign.start,
                   decoration: const InputDecoration(
                       filled: true,
-                      fillColor: Colors.white,
+                      fillColor: Color.fromARGB(255, 30, 11, 76),
                       hintText: 'Firstname',
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(6)))),
@@ -126,11 +128,12 @@ class _SignupState extends State<Signup> {
                   style: const TextStyle(
                     fontFamily: 'Poppinsr',
                     fontSize: 17,
+                    color: Colors.white
                   ),
                   textAlign: TextAlign.start,
                   decoration: const InputDecoration(
                       filled: true,
-                      fillColor: Colors.white,
+                      fillColor: Color.fromARGB(255, 30, 11, 76),
                       hintText: 'LastName',
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(6)))),
@@ -148,11 +151,12 @@ class _SignupState extends State<Signup> {
                   style: const TextStyle(
                     fontFamily: 'Poppinsr',
                     fontSize: 17,
+                    color: Colors.white
                   ),
                   textAlign: TextAlign.start,
                   decoration: const InputDecoration(
                       filled: true,
-                      fillColor: Colors.white,
+                      fillColor: Color.fromARGB(255, 30, 11, 76),
                       hintText: 'Username',
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(6)))),
@@ -171,11 +175,12 @@ class _SignupState extends State<Signup> {
                   style: const TextStyle(
                     fontFamily: 'Poppinsr',
                     fontSize: 17,
+                    color: Colors.white
                   ),
                   textAlign: TextAlign.start,
                   decoration: const InputDecoration(
                       filled: true,
-                      fillColor: Colors.white,
+                      fillColor: Color.fromARGB(255, 30, 11, 76),
                       hintText: 'Phone',
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(6)))),
@@ -194,11 +199,12 @@ class _SignupState extends State<Signup> {
                   style: const TextStyle(
                     fontFamily: 'Poppinsr',
                     fontSize: 17,
+                    color: Colors.white
                   ),
                   textAlign: TextAlign.start,
                   decoration: const InputDecoration(
                       filled: true,
-                      fillColor: Colors.white,
+                      fillColor: Color.fromARGB(255, 30, 11, 76),
                       hintText: AutofillHints.email,
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(6)))),
@@ -216,11 +222,12 @@ class _SignupState extends State<Signup> {
                   style: const TextStyle(
                     fontFamily: 'Poppinsr',
                     fontSize: 17,
+                    color: Colors.white
                   ),
                   textAlign: TextAlign.start,
                   decoration: const InputDecoration(
                       filled: true,
-                      fillColor: Colors.white,
+                      fillColor: Color.fromARGB(255, 30, 11, 76),
                       hintText: 'Password',
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(6)))),
@@ -240,11 +247,12 @@ class _SignupState extends State<Signup> {
                   style: const TextStyle(
                     fontFamily: 'Poppinsr',
                     fontSize: 17,
+                    color: Colors.white
                   ),
                   textAlign: TextAlign.start,
                   decoration: const InputDecoration(
                       filled: true,
-                      fillColor: Colors.white,
+                      fillColor: Color.fromARGB(255, 30, 11, 76),
                       hintText: 'Re-enter Password',
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(6)))),

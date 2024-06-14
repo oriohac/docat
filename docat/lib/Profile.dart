@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:docat/detail.dart';
 import 'package:docat/main.dart';
+import 'package:docat/updatepet.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
@@ -42,6 +42,9 @@ class _ProfileState extends State<Profile> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+    });
     userinfo = getUser();
     pet = getPetdata();
   }
@@ -87,6 +90,34 @@ class _ProfileState extends State<Profile> {
     }
   }
 
+  Future<void> delete(int id) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token');
+    final response = await http
+        .delete(Uri.parse('http://127.0.0.1:8000/deleteA/$id'), headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Token $token'
+    });
+    if (response.statusCode == 204) {
+      setState(() {
+        getPetdata();
+      });
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text('Deleted'),
+        behavior: SnackBarBehavior.floating,
+        dismissDirection: DismissDirection.horizontal,
+      ));
+      
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text('Failed to delete'),
+        behavior: SnackBarBehavior.floating,
+        dismissDirection: DismissDirection.horizontal,
+      ));
+      throw Exception('failed to delete');
+    }
+  }
+
   Future<void> logout() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
     String? token = pref.getString('token');
@@ -106,7 +137,7 @@ class _ProfileState extends State<Profile> {
     if (response.statusCode == 204) {
       pref.remove('token');
       ScaffoldMessenger.of(context!)
-          .showSnackBar(const SnackBar(content: Text('Lougout success')));
+          .showSnackBar(const SnackBar(content: Text('Logout success')));
       Navigator.pop(context);
       Navigator.pushNamed(context, '/home');
     } else {
@@ -116,6 +147,9 @@ class _ProfileState extends State<Profile> {
           behavior: SnackBarBehavior.floating));
     }
   }
+
+  final ScrollController _scrollController = ScrollController();
+ 
 
   @override
   Widget build(BuildContext context) {
@@ -153,8 +187,7 @@ class _ProfileState extends State<Profile> {
                                 shape: const RoundedRectangleBorder(
                                     borderRadius:
                                         BorderRadius.all(Radius.circular(6))),
-                                tileColor:
-                                    const Color.fromARGB(255, 200, 215, 222),
+                                // tileColor:const Color.fromARGB(255, 200, 215, 222),
                                 leading: ClipOval(
                                     child: Image.asset(
                                   'lib/images/default.jpg',
@@ -189,12 +222,14 @@ class _ProfileState extends State<Profile> {
                       return const Center(child: Text('No pets found.'));
                     } else if (snapshot.hasData) {
                       return ListView.builder(
+                        controller: _scrollController,
+                        reverse: true,
                           itemCount: snapshot.data!.length,
                           itemBuilder: (context, index) {
                             return Card(
                               margin: const EdgeInsets.fromLTRB(8, 4, 8, 4),
                               elevation: 2.0,
-                              color: const Color.fromARGB(255, 244, 248, 244),
+                              // color: const Color.fromARGB(255, 244, 248, 244),
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Expanded(
@@ -263,28 +298,69 @@ class _ProfileState extends State<Profile> {
                                           Text(snapshot.data![index].location),
                                         ],
                                       ),
+                                      const SizedBox(height: 6,),
                                       Row(
                                         children: [
                                           ElevatedButton(
                                               style: ElevatedButton.styleFrom(
+                                                backgroundColor:const Color.fromARGB(255, 3, 99, 244),
                                                   shape:
                                                       const RoundedRectangleBorder(
                                                           borderRadius:
                                                               BorderRadius.all(
                                                                   Radius
                                                                       .circular(
-                                                                          2)))),
+                                                                          9)))),
                                               onPressed: () {
                                                 Navigator.push(
                                                     context,
                                                     MaterialPageRoute(
                                                         builder: (context) =>
-                                                            Detail(
+                                                            Updatepet(
                                                                 pet: snapshot
                                                                         .data![
                                                                     index])));
                                               },
-                                              child: const Text("Edit")),
+                                              child: const Row(
+                                                children: [
+                                                  Icon(Icons.edit_outlined),
+                                                  SizedBox(
+                                                    width: 4,
+                                                  ),
+                                                  Text(
+                                                    "Edit",
+                                                    style:
+                                                        TextStyle(fontSize: 16,color: Colors.white),
+                                                  ),
+                                                ],
+                                              )),
+                                          const Spacer(),
+                                          ElevatedButton(
+                                            onPressed: () async {
+                                              await delete(snapshot.data![index].id);
+                                              setState(() {
+                                                getPetdata();
+                                              });
+                                            },
+                                            style: ElevatedButton.styleFrom(
+                                                backgroundColor: const Color.fromARGB(
+                                                    255, 212, 16, 2),
+                                                shape: const RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.all(
+                                                            Radius.circular(
+                                                                9)))),
+                                            child: const Row(
+                                              children: [
+                                                Icon(
+                                                    Icons.delete_outline_sharp),
+                                                Text("Delete",
+                                                    style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontSize: 16)),
+                                              ],
+                                            ),
+                                          ),
                                         ],
                                       )
                                     ],
@@ -302,15 +378,22 @@ class _ProfileState extends State<Profile> {
             const SizedBox(
               height: 12,
             ),
-            ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color.fromARGB(255, 200, 215, 222),
-                    shape: const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(2)))),
-                onPressed: () {
-                  Navigator.pushNamed(context, '/create');
-                },
-                child: const Text("Create New")),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
+              child: SizedBox(
+                width: double.infinity,
+                height: 46,
+                child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color.fromARGB(255, 3, 99, 244),
+                        shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(4)))),
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/create');
+                    },
+                    child: const Text("Create New",style: TextStyle(color: Colors.white),)),
+              ),
+            ),
             const SizedBox(
               height: 12,
             ),

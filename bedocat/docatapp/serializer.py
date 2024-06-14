@@ -3,9 +3,10 @@ from django.contrib.auth import authenticate
 from django.contrib.auth.password_validation import validate_password
 from .models import Pets, User
 class PetSerializer(serializers.ModelSerializer):
+    ownerphone = serializers.CharField(source='owner.phone',read_only = True)
     class Meta:
         model = Pets
-        fields = '__all__'
+        fields = ['petimage','pettype','breed','amount','description','location','owner','ownerphone','id']
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:

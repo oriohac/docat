@@ -1,35 +1,64 @@
-import 'dart:convert';
 import 'dart:io';
 
+import 'package:docat/main.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:http/http.dart' as http;
-import 'package:image_picker/image_picker.dart';
 import 'package:http_parser/http_parser.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
+import 'package:path/path.dart' as path;
 
-class Create extends StatefulWidget {
-  const Create({super.key});
+class Updatepet extends StatefulWidget {
+  Updatepet({super.key, required this.pet});
+  final Petdata pet;
 
   @override
-  State<Create> createState() => _CreateState();
+  State<Updatepet> createState() => _UpdatepetState();
 }
 
-class _CreateState extends State<Create> {
-  String pettype = 'DOG';
-  String location = 'ABIA';
-  TextEditingController petbreedCon = TextEditingController();
-  TextEditingController petAmountCon = TextEditingController();
-  TextEditingController petDescriptionCon = TextEditingController();
+class _UpdatepetState extends State<Updatepet> {
+  late String pettype;
+  late String location;
+  late TextEditingController petbreedCon;
+  late TextEditingController petAmountCon;
+  late TextEditingController petDescriptionCon;
 
   File? selectedimage;
+  @override
+  void initState() {
+    super.initState();
+    pettype = widget.pet.pettype;
+    location = widget.pet.location;
+    petbreedCon = TextEditingController(text: widget.pet.breed);
+    petAmountCon = TextEditingController(text: widget.pet.amount.toString());
+    petDescriptionCon = TextEditingController(text: widget.pet.description);
+    _loadInitialImage();
+  }
 
-  Future<void> createnew() async {
+  Future<void> _loadInitialImage() async {
+    final directory = await getTemporaryDirectory();
+    final filePath = path.join(directory.path, path.basename(widget.pet.petimage));
+    final file = File(filePath);
+    final response = await http
+        .get(Uri.parse('http://127.0.0.1:8000/${widget.pet.petimage}'));
+
+    if (response.statusCode == 200) {
+      await file.writeAsBytes(response.bodyBytes);
+      setState(() {
+        selectedimage = file;
+      });
+    } else {
+      print('Failed to load image');
+    }
+  }
+
+  Future<void> updatePet() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     final id = prefs.getInt('id');
     final request = http.MultipartRequest(
-      'POST',
-      Uri.parse('http://127.0.0.1:8000/list/'),
+      'PUT',
+      Uri.parse('http://127.0.0.1:8000/editP/${widget.pet.id}'),
     );
 
     request.fields["pettype"] = pettype;
@@ -38,9 +67,12 @@ class _CreateState extends State<Create> {
     request.fields["description"] = petDescriptionCon.text;
     request.fields["location"] = location;
     request.fields["owner"] = id.toString();
-    request.files.add(await http.MultipartFile.fromPath(
-        'petimage', selectedimage!.path,
-        contentType: MediaType('image', 'jpeg')));
+    if (selectedimage != null) {
+      request.files.add(await http.MultipartFile.fromPath(
+          'petimage', selectedimage!.path,
+          contentType: MediaType('image', 'jpeg')));
+    }
+
     try {
       final response = await request.send();
       if (petbreedCon.text.isEmpty ||
@@ -56,7 +88,7 @@ class _CreateState extends State<Create> {
           ]),
           behavior: SnackBarBehavior.floating,
         ));
-      } else if (response.statusCode == 201) {
+      } else if (response.statusCode == 200) {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Text('Post Success'),
           behavior: SnackBarBehavior.floating,
@@ -241,7 +273,10 @@ class _CreateState extends State<Create> {
                       width: 4,
                     ),
                     selectedimage != null
-                        ? Image.file(selectedimage!, width: 100, height: 60)
+                        ? Image.file(
+                            selectedimage!,
+                            width: 100,
+                            height: 60)
                         : GestureDetector(
                             onTap: () {
                               getImage();
@@ -255,7 +290,7 @@ class _CreateState extends State<Create> {
                       height: 46,
                       child: ElevatedButton(
                         onPressed: () {
-                          createnew();
+                          updatePet();
                         },
                         style: ElevatedButton.styleFrom(
                             backgroundColor:
@@ -264,7 +299,7 @@ class _CreateState extends State<Create> {
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(6)))),
                         child: const Text(
-                          'Submit',
+                          'Save Changes',
                           style: TextStyle(color: Colors.white),
                         ),
                       ),

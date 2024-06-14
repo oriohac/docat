@@ -9,20 +9,42 @@ import 'package:docat/detail.dart';
 import 'package:docat/login.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
+final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
 void main() {
   runApp(
-    MaterialApp(routes: {
-      '/create': (context) => const Create(),
-      '/login': (context) => const Login(),
-      '/signup': (context) => const Signup(),
-      '/profile': (context) => const Profile(),
-      '/home': (context) => const Docat(),
-    }, debugShowCheckedModeBanner: false, home: const Docat()),
+    ValueListenableBuilder(
+        valueListenable: darkNotifier,
+        builder: (context, value, child) {
+          return MaterialApp(
+            routes: {
+              '/create': (context) => const Create(),
+              '/login': (context) => const Login(),
+              '/signup': (context) => const Signup(),
+              '/profile': (context) => const Profile(),
+              '/home': (context) => const Docat(),
+            },
+            debugShowCheckedModeBanner: false,
+            home: const Docat(),
+            navigatorObservers: [routeObserver],
+            // theme: ThemeData.light().copyWith(
+            //       cardTheme: CardTheme(
+            //         surfaceTintColor: Color(0xFFFFFFFF)
+            //       ),
+            //       cardColor: Colors.white,
+            //       scaffoldBackgroundColor: Color(0xFFF7F8FA),
+            //     ),
+            darkTheme: ThemeData.dark(),
+            themeMode: value ? ThemeMode.dark : ThemeMode.light,
+          );
+        }),
   );
 }
+
+final darkNotifier = ValueNotifier<bool>(false);
 
 class Petdata {
   final String petimage;
@@ -31,13 +53,17 @@ class Petdata {
   final String amount;
   final String description;
   final String location;
+  final String ownerphone;
+  final int id;
   Petdata(
       {required this.pettype,
       required this.breed,
       required this.amount,
       required this.description,
       required this.petimage,
-      required this.location});
+      required this.location,
+      required this.ownerphone,
+      required this.id});
   factory Petdata.fromJson(dynamic json) {
     return Petdata(
       pettype: json['pettype'] as String,
@@ -46,6 +72,8 @@ class Petdata {
       description: json['description'] as String,
       petimage: json['petimage'] as String,
       location: json['location'] as String,
+      ownerphone: json['ownerphone'] as String,
+      id: json['id'] as int,
     );
   }
 }
@@ -57,7 +85,7 @@ class Docat extends StatefulWidget {
   State<Docat> createState() => _DocatState();
 }
 
-class _DocatState extends State<Docat> {
+class _DocatState extends State<Docat> with RouteAware {
   Future<List<Petdata>> getPetdata() async {
     final response = await http.get(Uri.parse('http://127.0.0.1:8000/list/'));
     if (response.statusCode == 200) {
@@ -91,33 +119,61 @@ class _DocatState extends State<Docat> {
   }
 
   late Future<List<Petdata>> pet;
+  
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     pet = getPetdata();
+    
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final route = ModalRoute.of(context);
+    if (route is PageRoute<dynamic>) {
+      routeObserver.subscribe(this, route);
+    }
+  }
+
+  @override
+  void dispose() {
+    routeObserver.unsubscribe(this);
+    super.dispose();
+  }
+
+  @override
+  void didPopNext() {
+    // Refresh the data when coming back to this page
+    setState(() {
+      pet = getPetdata();
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    bool isDark = darkNotifier.value;
     double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
         actions: [
           const Spacer(),
-          MouseRegion(
-            cursor: SystemMouseCursors.click,
-            child: GestureDetector(
-              onTap: () {
-                goProfile();
-              },
-              child: ClipOval(
-                  child: Image.asset(
-                'lib/images/default.jpg',
-                width: 48,
-                height: 48,
-              )),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(0, 0, 8, 0),
+            child: MouseRegion(
+              cursor: SystemMouseCursors.click,
+              child: GestureDetector(
+                onTap: () {
+                  goProfile();
+                },
+                child: ClipOval(
+                    child: Image.asset(
+                  'lib/images/default.jpg',
+                  width: 42,
+                  height: 42,
+                )),
+              ),
             ),
           )
         ],
@@ -142,10 +198,53 @@ class _DocatState extends State<Docat> {
                 title: Text('PROFILE'),
               ),
             ),
-            const ListTile(
-              leading: Icon(Icons.logout),
-              title: Text('LOGOUT'),
-            )
+            Row(
+              children: [
+                const SizedBox(width: 14),
+                MouseRegion(
+                  cursor: SystemMouseCursors.click,
+                  child: GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        isDark = isDark;
+                        darkNotifier.value = !isDark;
+                      });
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.all(2),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(30),
+                          color: !isDark
+                              ? Colors.greenAccent
+                              : Colors.transparent),
+                      child: SvgPicture.asset('lib/images/brightness.svg',
+                          height: 28),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 6),
+                MouseRegion(
+                  cursor: SystemMouseCursors.click,
+                  child: GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        isDark = !isDark;
+                        darkNotifier.value = isDark;
+                      });
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.all(2),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(30),
+                          color:
+                              isDark ? Colors.greenAccent : Colors.transparent),
+                      child:
+                          SvgPicture.asset('lib/images/moon.svg', height: 28),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ],
         ),
       ),
@@ -178,6 +277,7 @@ class _DocatState extends State<Docat> {
                           child: Icon(
                         Icons.add_circle_outline,
                         size: 50,
+                        color: Color.fromARGB(255, 36, 224, 133),
                       )),
                     ),
                   ),
@@ -228,7 +328,7 @@ class _DocatState extends State<Docat> {
                             return Card(
                               margin: const EdgeInsets.fromLTRB(8, 4, 8, 4),
                               elevation: 2.0,
-                              color: const Color.fromARGB(255, 244, 248, 244),
+                              // color: const Color.fromARGB(255, 244, 248, 244),
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Expanded(
@@ -275,7 +375,8 @@ class _DocatState extends State<Docat> {
                                           const Text("Price: ",
                                               style: TextStyle(
                                                   fontWeight: FontWeight.bold)),
-                                          Text('₦${snapshot.data![index].amount}'),
+                                          Text(
+                                              '₦${snapshot.data![index].amount}'),
                                         ],
                                       ),
                                       Row(
@@ -284,7 +385,7 @@ class _DocatState extends State<Docat> {
                                               child: Text(
                                             snapshot.data![index].description,
                                             maxLines: 2,
-                                            overflow: TextOverflow.fade,
+                                            overflow: TextOverflow.ellipsis,
                                           )),
                                         ],
                                       ),

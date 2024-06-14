@@ -1,0 +1,2 @@
+[build]
+command = "python manage.py collectstatic --noninput" publish = "docatapp/static"

@@ -36,10 +36,9 @@ class _LoginState extends State<Login> {
         content: Text('Login success'),
         behavior: SnackBarBehavior.floating,
       ));
+      Navigator.pop(context);
       Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => Profile()));
+          context, MaterialPageRoute(builder: (context) => Profile()));
     } else {
       throw Exception('Login failed');
     }
@@ -51,8 +50,6 @@ class _LoginState extends State<Login> {
     _passwordController.dispose();
     super.dispose();
   }
-
- 
 
   @override
   Widget build(BuildContext context) {
@@ -96,11 +93,12 @@ class _LoginState extends State<Login> {
                   style: const TextStyle(
                     fontFamily: 'Poppinsr',
                     fontSize: 17,
+                    color: Colors.white
                   ),
                   textAlign: TextAlign.center,
                   decoration: const InputDecoration(
                       filled: true,
-                      fillColor: Colors.white,
+                      fillColor: Color.fromARGB(255, 30, 11, 76),
                       hintText: AutofillHints.username,
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(6)))),
@@ -118,11 +116,12 @@ class _LoginState extends State<Login> {
                   style: const TextStyle(
                     fontFamily: 'Poppinsr',
                     fontSize: 17,
+                    color: Colors.white
                   ),
                   textAlign: TextAlign.center,
                   decoration: const InputDecoration(
                       filled: true,
-                      fillColor: Colors.white,
+                      fillColor: Color.fromARGB(255, 30, 11, 76),
                       hintText: 'Password',
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(6)))),
@@ -194,10 +193,7 @@ class _LoginState extends State<Login> {
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text('Fill all fields')));
     } else {
-      
       loginApi();
-            
-      
     }
   }
 }
