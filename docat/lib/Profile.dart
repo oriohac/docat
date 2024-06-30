@@ -42,9 +42,6 @@ class _ProfileState extends State<Profile> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
-    });
     userinfo = getUser();
     pet = getPetdata();
   }
@@ -148,7 +145,7 @@ class _ProfileState extends State<Profile> {
     }
   }
 
-  final ScrollController _scrollController = ScrollController();
+  
  
 
   @override
@@ -222,8 +219,6 @@ class _ProfileState extends State<Profile> {
                       return const Center(child: Text('No pets found.'));
                     } else if (snapshot.hasData) {
                       return ListView.builder(
-                        controller: _scrollController,
-                        reverse: true,
                           itemCount: snapshot.data!.length,
                           itemBuilder: (context, index) {
                             return Card(
@@ -232,139 +227,137 @@ class _ProfileState extends State<Profile> {
                               // color: const Color.fromARGB(255, 244, 248, 244),
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
-                                child: Expanded(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Padding(
-                                        padding: const EdgeInsets.fromLTRB(
-                                            4, 4, 4, 8),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            Expanded(
-                                              child: Image.network(
-                                                  'http://127.0.0.1:8000/${snapshot.data![index].petimage}'),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      Row(
-                                        children: [
-                                          const Text('Pet Type: ',
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold)),
-                                          Text(
-                                            snapshot.data![index].pettype,
-                                            textAlign: TextAlign.start,
-                                            style: const TextStyle(),
-                                          ),
-                                        ],
-                                      ),
-                                      Row(
-                                        children: [
-                                          const Text("Breed: ",
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold)),
-                                          Text(snapshot.data![index].breed),
-                                        ],
-                                      ),
-                                      Row(
-                                        children: [
-                                          const Text("Price: ",
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold)),
-                                          Text(
-                                              '₦${snapshot.data![index].amount}'),
-                                        ],
-                                      ),
-                                      Row(
+                                child: Column(
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.start,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.fromLTRB(
+                                          4, 4, 4, 8),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
                                         children: [
                                           Expanded(
-                                              child: Text(
-                                            snapshot.data![index].description,
-                                            maxLines: 2,
-                                            overflow: TextOverflow.fade,
-                                          )),
-                                        ],
-                                      ),
-                                      Row(
-                                        children: [
-                                          const Text("Location: ",
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold)),
-                                          Text(snapshot.data![index].location),
-                                        ],
-                                      ),
-                                      const SizedBox(height: 6,),
-                                      Row(
-                                        children: [
-                                          ElevatedButton(
-                                              style: ElevatedButton.styleFrom(
-                                                backgroundColor:const Color.fromARGB(255, 3, 99, 244),
-                                                  shape:
-                                                      const RoundedRectangleBorder(
-                                                          borderRadius:
-                                                              BorderRadius.all(
-                                                                  Radius
-                                                                      .circular(
-                                                                          9)))),
-                                              onPressed: () {
-                                                Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            Updatepet(
-                                                                pet: snapshot
-                                                                        .data![
-                                                                    index])));
-                                              },
-                                              child: const Row(
-                                                children: [
-                                                  Icon(Icons.edit_outlined),
-                                                  SizedBox(
-                                                    width: 4,
-                                                  ),
-                                                  Text(
-                                                    "Edit",
-                                                    style:
-                                                        TextStyle(fontSize: 16,color: Colors.white),
-                                                  ),
-                                                ],
-                                              )),
-                                          const Spacer(),
-                                          ElevatedButton(
-                                            onPressed: () async {
-                                              await delete(snapshot.data![index].id);
-                                              setState(() {
-                                                getPetdata();
-                                              });
-                                            },
-                                            style: ElevatedButton.styleFrom(
-                                                backgroundColor: const Color.fromARGB(
-                                                    255, 212, 16, 2),
-                                                shape: const RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.all(
-                                                            Radius.circular(
-                                                                9)))),
-                                            child: const Row(
-                                              children: [
-                                                Icon(
-                                                    Icons.delete_outline_sharp),
-                                                Text("Delete",
-                                                    style: TextStyle(
-                                                        color: Colors.white,
-                                                        fontSize: 16)),
-                                              ],
-                                            ),
+                                            child: Image.network(
+                                                'http://127.0.0.1:8000/${snapshot.data![index].petimage}'),
                                           ),
                                         ],
-                                      )
-                                    ],
-                                  ),
+                                      ),
+                                    ),
+                                    Row(
+                                      children: [
+                                        const Text('Pet Type: ',
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold)),
+                                        Text(
+                                          snapshot.data![index].pettype,
+                                          textAlign: TextAlign.start,
+                                          style: const TextStyle(),
+                                        ),
+                                      ],
+                                    ),
+                                    Row(
+                                      children: [
+                                        const Text("Breed: ",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold)),
+                                        Text(snapshot.data![index].breed),
+                                      ],
+                                    ),
+                                    Row(
+                                      children: [
+                                        const Text("Price: ",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold)),
+                                        Text(
+                                            '₦${snapshot.data![index].amount}'),
+                                      ],
+                                    ),
+                                    Row(
+                                      children: [
+                                        Expanded(
+                                            child: Text(
+                                          snapshot.data![index].description,
+                                          maxLines: 2,
+                                          overflow: TextOverflow.fade,
+                                        )),
+                                      ],
+                                    ),
+                                    Row(
+                                      children: [
+                                        const Text("Location: ",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold)),
+                                        Text(snapshot.data![index].location),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 6,),
+                                    Row(
+                                      children: [
+                                        ElevatedButton(
+                                            style: ElevatedButton.styleFrom(
+                                              backgroundColor:const Color.fromARGB(255, 3, 99, 244),
+                                                shape:
+                                                    const RoundedRectangleBorder(
+                                                        borderRadius:
+                                                            BorderRadius.all(
+                                                                Radius
+                                                                    .circular(
+                                                                        9)))),
+                                            onPressed: () {
+                                              Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          Updatepet(
+                                                              pet: snapshot
+                                                                      .data![
+                                                                  index])));
+                                            },
+                                            child: const Row(
+                                              children: [
+                                                Icon(Icons.edit_outlined),
+                                                SizedBox(
+                                                  width: 4,
+                                                ),
+                                                Text(
+                                                  "Edit",
+                                                  style:
+                                                      TextStyle(fontSize: 16,color: Colors.white),
+                                                ),
+                                              ],
+                                            )),
+                                        const Spacer(),
+                                        ElevatedButton(
+                                          onPressed: () async {
+                                            await delete(snapshot.data![index].id);
+                                            setState(() {
+                                              getPetdata();
+                                            });
+                                          },
+                                          style: ElevatedButton.styleFrom(
+                                              backgroundColor: const Color.fromARGB(
+                                                  255, 212, 16, 2),
+                                              shape: const RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.all(
+                                                          Radius.circular(
+                                                              9)))),
+                                          child: const Row(
+                                            children: [
+                                              Icon(
+                                                  Icons.delete_outline_sharp),
+                                              Text("Delete",
+                                                  style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 16)),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    )
+                                  ],
                                 ),
                               ),
                             );

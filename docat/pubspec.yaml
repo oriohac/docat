@@ -68,7 +68,8 @@ flutter:
   assets:
     - lib/images/default.jpg
     - lib/images/brightness.svg
-    - lib/images/moon.svg 
+    - lib/images/moon.svg
+    - lib/images/dogoico.png 
     # - images/a_dot_burr.jpeg
     # - images/a_dot_ham.jpeg
 

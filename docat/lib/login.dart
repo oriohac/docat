@@ -40,6 +40,12 @@ class _LoginState extends State<Login> {
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => Profile()));
     } else {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('Failed to Login Check your details'),
+        behavior: SnackBarBehavior.floating,
+        duration: Duration(seconds: 8),
+        dismissDirection: DismissDirection.horizontal,
+      ));
       throw Exception('Login failed');
     }
   }
@@ -91,15 +97,15 @@ class _LoginState extends State<Login> {
                 child: TextField(
                   controller: _usernameController,
                   style: const TextStyle(
-                    fontFamily: 'Poppinsr',
-                    fontSize: 17,
-                    color: Colors.white
-                  ),
+                      fontFamily: 'Poppinsr',
+                      fontSize: 17,
+                      color: Colors.white),
                   textAlign: TextAlign.center,
                   decoration: const InputDecoration(
                       filled: true,
                       fillColor: Color.fromARGB(255, 30, 11, 76),
                       hintText: AutofillHints.username,
+                      hintStyle: TextStyle(color: Colors.white),
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(6)))),
                 ),
@@ -114,15 +120,15 @@ class _LoginState extends State<Login> {
                 child: TextField(
                   controller: _passwordController,
                   style: const TextStyle(
-                    fontFamily: 'Poppinsr',
-                    fontSize: 17,
-                    color: Colors.white
-                  ),
+                      fontFamily: 'Poppinsr',
+                      fontSize: 17,
+                      color: Colors.white),
                   textAlign: TextAlign.center,
                   decoration: const InputDecoration(
                       filled: true,
                       fillColor: Color.fromARGB(255, 30, 11, 76),
                       hintText: 'Password',
+                      hintStyle: TextStyle(color: Colors.white),
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(6)))),
                   obscureText: true,

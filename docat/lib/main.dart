@@ -1,12 +1,12 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:ffi';
 
 import 'package:docat/Profile.dart';
 import 'package:docat/Signup.dart';
 import 'package:docat/create.dart';
 import 'package:docat/detail.dart';
 import 'package:docat/login.dart';
+import 'package:docat/welcome.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -26,9 +26,10 @@ void main() {
               '/signup': (context) => const Signup(),
               '/profile': (context) => const Profile(),
               '/home': (context) => const Docat(),
+              '/welcome': (context) => const Welcome(),
             },
             debugShowCheckedModeBanner: false,
-            home: const Docat(),
+            home: const Welcome(),
             navigatorObservers: [routeObserver],
             // theme: ThemeData.light().copyWith(
             //       cardTheme: CardTheme(
@@ -331,111 +332,109 @@ class _DocatState extends State<Docat> with RouteAware {
                               // color: const Color.fromARGB(255, 244, 248, 244),
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
-                                child: Expanded(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Padding(
-                                        padding: const EdgeInsets.fromLTRB(
-                                            4, 4, 4, 8),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            Expanded(
-                                              child: Image.network(
-                                                  'http://127.0.0.1:8000/${snapshot.data![index].petimage}'),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      Row(
+                                child: Column(
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.start,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.fromLTRB(
+                                          4, 4, 4, 8),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
                                         children: [
-                                          const Text('Pet Type: ',
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold)),
-                                          Text(
-                                            snapshot.data![index].pettype,
-                                            textAlign: TextAlign.start,
-                                            style: const TextStyle(),
+                                          Expanded(
+                                            child: Image.network(
+                                                'http://127.0.0.1:8000/${snapshot.data![index].petimage}'),
                                           ),
                                         ],
                                       ),
-                                      Row(
-                                        children: [
-                                          const Text("Breed: ",
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold)),
-                                          Text(snapshot.data![index].breed),
-                                        ],
-                                      ),
-                                      Row(
-                                        children: [
-                                          const Text("Price: ",
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold)),
-                                          Text(
-                                              '₦${snapshot.data![index].amount}'),
-                                        ],
-                                      ),
-                                      Row(
-                                        children: [
-                                          Expanded(
-                                              child: Text(
-                                            snapshot.data![index].description,
-                                            maxLines: 2,
-                                            overflow: TextOverflow.ellipsis,
-                                          )),
-                                        ],
-                                      ),
-                                      Row(
-                                        children: [
-                                          const Text("Location: ",
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold)),
-                                          Text(snapshot.data![index].location),
-                                        ],
-                                      ),
-                                      Row(
-                                        children: [
-                                          TextButton(
-                                              onPressed: () {
-                                                Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            Detail(
-                                                                pet: snapshot
-                                                                        .data![
-                                                                    index])));
-                                              },
-                                              child: const Text("Details")),
-                                          const Spacer(),
-                                          ElevatedButton(
-                                              style: ElevatedButton.styleFrom(
-                                                  shape:
-                                                      const RoundedRectangleBorder(
-                                                          borderRadius:
-                                                              BorderRadius.all(
-                                                                  Radius
-                                                                      .circular(
-                                                                          2)))),
-                                              onPressed: () {
-                                                Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            Detail(
-                                                                pet: snapshot
-                                                                        .data![
-                                                                    index])));
-                                              },
-                                              child: const Text("Adopt")),
-                                        ],
-                                      )
-                                    ],
-                                  ),
+                                    ),
+                                    Row(
+                                      children: [
+                                        const Text('Pet Type: ',
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold)),
+                                        Text(
+                                          snapshot.data![index].pettype,
+                                          textAlign: TextAlign.start,
+                                          style: const TextStyle(),
+                                        ),
+                                      ],
+                                    ),
+                                    Row(
+                                      children: [
+                                        const Text("Breed: ",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold)),
+                                        Text(snapshot.data![index].breed),
+                                      ],
+                                    ),
+                                    Row(
+                                      children: [
+                                        const Text("Price: ",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold)),
+                                        Text(
+                                            '₦${snapshot.data![index].amount}'),
+                                      ],
+                                    ),
+                                    Row(
+                                      children: [
+                                        Expanded(
+                                            child: Text(
+                                          snapshot.data![index].description,
+                                          maxLines: 2,
+                                          overflow: TextOverflow.ellipsis,
+                                        )),
+                                      ],
+                                    ),
+                                    Row(
+                                      children: [
+                                        const Text("Location: ",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold)),
+                                        Text(snapshot.data![index].location),
+                                      ],
+                                    ),
+                                    Row(
+                                      children: [
+                                        TextButton(
+                                            onPressed: () {
+                                              Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          Detail(
+                                                              pet: snapshot
+                                                                      .data![
+                                                                  index])));
+                                            },
+                                            child: const Text("Details")),
+                                        const Spacer(),
+                                        ElevatedButton(
+                                            style: ElevatedButton.styleFrom(
+                                                shape:
+                                                    const RoundedRectangleBorder(
+                                                        borderRadius:
+                                                            BorderRadius.all(
+                                                                Radius
+                                                                    .circular(
+                                                                        2)))),
+                                            onPressed: () {
+                                              Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          Detail(
+                                                              pet: snapshot
+                                                                      .data![
+                                                                  index])));
+                                            },
+                                            child: const Text("Adopt")),
+                                      ],
+                                    )
+                                  ],
                                 ),
                               ),
                             );

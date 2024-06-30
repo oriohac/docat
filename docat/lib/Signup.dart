@@ -112,6 +112,7 @@ class _SignupState extends State<Signup> {
                       filled: true,
                       fillColor: Color.fromARGB(255, 30, 11, 76),
                       hintText: 'Firstname',
+                      hintStyle: TextStyle(color: Colors.white),
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(6)))),
                 ),
@@ -135,6 +136,7 @@ class _SignupState extends State<Signup> {
                       filled: true,
                       fillColor: Color.fromARGB(255, 30, 11, 76),
                       hintText: 'LastName',
+                      hintStyle: TextStyle(color: Colors.white),
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(6)))),
                 ),
@@ -158,6 +160,7 @@ class _SignupState extends State<Signup> {
                       filled: true,
                       fillColor: Color.fromARGB(255, 30, 11, 76),
                       hintText: 'Username',
+                      hintStyle: TextStyle(color: Colors.white),
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(6)))),
                 ),
@@ -182,6 +185,7 @@ class _SignupState extends State<Signup> {
                       filled: true,
                       fillColor: Color.fromARGB(255, 30, 11, 76),
                       hintText: 'Phone',
+                      hintStyle: TextStyle(color: Colors.white),
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(6)))),
                 ),
@@ -206,6 +210,7 @@ class _SignupState extends State<Signup> {
                       filled: true,
                       fillColor: Color.fromARGB(255, 30, 11, 76),
                       hintText: AutofillHints.email,
+                      hintStyle: TextStyle(color: Colors.white),
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(6)))),
                 ),
@@ -229,6 +234,7 @@ class _SignupState extends State<Signup> {
                       filled: true,
                       fillColor: Color.fromARGB(255, 30, 11, 76),
                       hintText: 'Password',
+                      hintStyle: TextStyle(color: Colors.white),
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(6)))),
                   obscureText: true,
@@ -254,6 +260,7 @@ class _SignupState extends State<Signup> {
                       filled: true,
                       fillColor: Color.fromARGB(255, 30, 11, 76),
                       hintText: 'Re-enter Password',
+                      hintStyle: TextStyle(color: Colors.white),
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(6)))),
                   obscureText: true,
